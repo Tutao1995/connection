@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>联动添加与删除</title>
+	<style>
+		*{padding:0;margin: 0}
+		a{text-decoration: none;}
+		#wrap{width:100%;height:100%;position:fixed;top:0;left:0;}
+		#left{width: 30%;height:100%;background: #fff;float:left;padding:20px 40px;}
+		#left .hot{font-size: 24px;font-weight: bold;color:#d63e3e;}
+		#wrap .area{margin:40px 0;}
+		#right{width:70%;height:100%;background: #bbb;margin-left:30%;}
+		#right .tagsbox{width:400px;padding:40px 0;}
+		.tagsbox span{padding:10px 18px;background: #eabebe;border-radius: 4px;box-shadow: inset 2px 1px 2px 10px pink;display: inline-block;margin:4px 2px;}
+		.tagsbox span a{margin-left:4px;border-left:1px solid #a03838;padding-left:4px;color:#111;}
+	</style>
+</head>
+<body>
+	
+	<div id="wrap">
+		<div id="left">
+			<span class="hot">热门目的地：</span>
+			<div class="area" id="area">
+				<a href="javascript:void(0);">泰国</a>
+				<a href="javascript:void(0);">三亚</a>
+				<a href="javascript:void(0);">新西兰</a>
+				<a href="javascript:void(0);">云南</a>
+				<a href="javascript:void(0);">哈尔滨</a>
+			</div> 
+			<div class="tagsbox" id="leftTarget">
+				
+			</div>
+		</div>
+		<div id="right">
+			<div class="tagsbox" id="rightTarget">
+				
+			</div>
+		</div>
+	</div>
+	<script>
+		var arr = [];//创建一个数组
+		window.onload = function(){
+			//获取area下发的a链接
+			var areaDom = document.getElementById("area");
+			//获取area元素下面的孩子
+			var areaChilds = areaDom.children;
+			//获取左边目标对象
+			var leftTarget = document.getElementById("leftTarget");
+			var rightTarget = document.getElementById("rightTarget");
+			for(var i=0;i<areaChilds.length;i++){
+				areaChilds[i].onclick = function(){
+					var text = this.innerHTML;//获取文本
+					if(arr.indexOf(text)==-1){
+						leftTarget.innerHTML+= "<span>"+text+"<a href='javascript:void(0);' onclick='removeItem(this)'>×</a></span>";
+						rightTarget.innerHTML+="<span>"+text+"</span>";
+						arr.push(text);//往数组中添加text
+					}
+				};
+			}
+
+		};
+
+		//点击删除元素
+		function removeItem(obj){
+			//获取a链接的父亲spanDom
+			var spanDom = obj.parentNode;
+			var divDom = spanDom.parentElement;
+			//数组中移除text
+			var text = spanDom.innerText || spanDom.textContent;
+			text = text.replace("×","");
+			var index = arr.indexOf(text);
+			arr.splice(index,1);
+			divDom.removeChild(spanDom);
+			//删除右边元素
+			// var child = rightTarget.children;
+			// for(var i=0;i<child.length;i++){
+			// 	var cText = child[i].innerHTML;
+			// 	if(cText==text){
+			// 		rightTarget.removeChild(child[i]);
+			// 	}
+			// }
+
+			//数组当中剩下的就是我想要拼接的
+			var html = "";
+			for(var i=0;i<arr.length;i++){
+				html += "<span>"+arr[i]+"</span>"
+			}
+			rightTarget.innerHTML = html;
+		}	
+	</script>
+</body>
+</html>
